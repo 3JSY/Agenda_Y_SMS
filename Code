@@ -1,0 +1,292 @@
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+
+//Definición de Estructuras
+struct Contacto{
+	string nombre;
+	string correo;
+	string phone;
+	Contacto*sgte;
+};
+
+struct Letras{
+	char letra;
+	Contacto*subLista;
+	Letras*ante;
+	Letras*sgte;
+};
+
+struct ListaSMSAEnviar{
+	string sms;
+	string InfoReceptor;
+	ListaSMSAEnviar* sgte;
+};
+
+struct ColaSMSPrioridad{
+	string prioridad;
+	ListaSMSAEnviar*subcola;
+	ColaSMSPrioridad*sgte;
+};
+
+struct ListaSMSEnviados{
+	  string MSG;
+	  string Destinatario;
+      ListaSMSEnviados*sgte;              
+};
+
+/*
+	1. Crear                                                     *Todas las estructuras
+	2. EsVacia  												 *Todas las estructuras
+	3. ***VolverMenu***
+	4. RecorrerLetra (char letra)
+	5. InsertarLetraAZ
+	6. RecorrerContacto (char letra*, int phone)				 *cambiar a sacar la letra del nombre
+	7. InsertarContacto (Contacto* &listaContactos, int phone)   *Revisar requerimiento 2 pag(1)
+	8. MostrarContactosDerAIzq (char letra)						 *
+	
+	
+	                            
+	Joxe	   (CrearContacto 	CrearLetras		EsvaciaContacto		EsVaciaLetras		RecorrerLetra)  #check  *(Y)*
+	Joshua		CrearListaSMSEnviar 	EsVaciaListaSMSEnviar		RecorrerContacto    CrearColasSMSPrioridad  EsVaciaColasSMSPRioridad  InsertarListaAZ   InsertarContacto   #check  °m°
+	Jeison		CrearListaSMSEnviados	EsVaciaListaSMSEnviados		MostrarContactosDerAIzq		#check	¬¬
+	
+	
+	NOTA*********** DOCUMENTAR LOS PROCESOS QUE HAGAN
+					DEJAR MARCADO LO QUE YA HICERON
+					SI PRESENTAN PROBLEMAS, DEJAR AVISADO PARA LUEGO COMENTARLO
+					AGREGUEN UNA MOTIVACIÓN lml
+					********************************************* DENLO TODO AMIGOS XD ***************************************************
+					Che 30-25,26   "Si programar quieres, romperte la jupa debes"
+					J.M. III V.1	"Programo, luego existo, no programas no existes y eres una basofia"
+					J.D. 07:25 am  "Si la habilidad que tenemos para inventar tonteras la tuvieramos para programar,
+					                   APPLE, Microsoft y UNIX nos besarían los zapatos"
+*/
+
+
+
+// Weones... Me extraña de ustedes... Había 2 estructuras definidas que no tenían el puntero a sgte... .-.
+// Oseaaaaa... Reatsionen... xD
+// Mae y cuando usan un getline tienen que usarlo para recuperar todas las demas cadenas del mismo metodo xq sino no 
+// los deja insertar las otras
+
+/***** Ronda#1-Inicio-By Che,Joshua & Jeison...\m/ *******/
+
+	//*Metodo para Crear Contacto
+	void CrearContacto (Contacto*&LContacto){
+		LContacto=NULL; 													
+	}
+	
+	
+	//*Metodo para Crear Letras
+	void CrearLetras (Letras*&LLetras){
+		LLetras=NULL;   													
+	}
+	
+	
+	//°Método para Crear Listas SMS A Enviar
+	void CrearListasSMSAEnviar(ListaSMSAEnviar* &LEnviar){
+		LEnviar=NULL;														
+	}
+	
+	//¬¬Método para crear Lista SMS enviados
+	void CrearListaSMSEnviados(ListaSMSEnviados* &LEnviados)
+	{LEnviados=NULL;}
+	
+	
+	//°Método para Crear Colas SMS Prioridad
+	void CrearColasSMSPrioridad(ListaSMSAEnviar* &CSMSPrioridad){
+		CSMSPrioridad=NULL;
+	}
+	
+	//*Metodo para Es Vacia Contacto
+	bool EsVaciaContacto(Contacto*LContacto){
+        if (LContacto == NULL){
+			return true;}
+		else{
+			return false;}
+	}
+	
+	//*Metodo para Es Vacia Letras
+	bool EsVaciaLetras(Letras*LLetras){
+        if (LLetras == NULL){
+			return true;}
+		else{
+			return false;}
+	}
+	
+	//°Método para Es Vacia Lista SMS A Enviar
+	bool EsVaciaListaSMSAEnviar(ListaSMSAEnviar* LEnviar){
+		if (LEnviar == NULL){
+			return true;}
+		else{
+			return false;}
+	}
+	
+	//¬¬ Metodo Es Vacia Lista SMS Enviados
+	bool EsVaciaListaSMSEnviados(ListaSMSEnviados* LEnviados)
+	{
+         if(LEnviados=NULL)
+         {return true;}
+         else{return false;}
+    }
+	
+	bool ColaVaciaPrioridad(ColaSMSPrioridad* cola){
+     	if (cola == NULL){
+     	    return true;}
+		else{
+     		return false;}
+	}
+	
+	//*Metodo Recorrer Letra
+	void RecorrerLetras (Letras* LLetras, char word){
+        Letras* auxLetras = new Letras;//Se crea un auxiliar Letras
+    	if(EsVaciaLetras(LLetras)){//Inicio If#1
+    		cout << "La lista de Letras esta Vacia" << endl;
+    		}else{
+    			auxLetras = LLetras;
+    			while(auxLetras != NULL && auxLetras->letra != word){//Inicio While
+    				auxLetras = auxLetras->sgte;
+    			}
+    			if(auxLetras == NULL){
+    				cout << "Letra no encontrada" << endl;
+    			}else{
+    				cout << "Informacion Encontrada" << endl;
+				}
+   			 }
+	}//Fin Void
+	
+	
+	//°Método Recorrer Contacto
+	bool RecorrerContacto (Contacto* LContactos, string numero){
+		Contacto* auxContacto = new Contacto;
+		if(EsVaciaContacto(LContactos)){
+			cout << "La Lista de Contactos está vacía" << endl;
+		}else{
+			auxContacto = LContactos;
+			while(auxContacto != NULL && auxContacto->phone != numero){
+				auxContacto = auxContacto->sgte;
+			}
+			if(auxContacto == NULL){
+				return false;																	//No existe contacto con el numero de parametro
+			}
+			else{
+				return true;																	//Existe un contacto con el mismo numero
+			}
+		}
+	}//Fin Bool
+	
+	
+	
+	//°Método Nodos de Letras
+	void InsertarListaAZ(Letras* &LetrasAZ){
+	//Declarar el nuevo nodo a insertar
+	Letras* aux = new Letras;
+	
+	//Agregar nodos de la A hasta la Z
+		for(char l='A';l<='Z';l++)
+		{	
+			Letras * nodoAgregar = new Letras;
+			nodoAgregar->sgte = NULL;
+			nodoAgregar->ante = NULL;
+			nodoAgregar->subLista = NULL;
+			nodoAgregar->letra=l;
+			if (EsVaciaLetras(LetrasAZ)){
+			    LetrasAZ = nodoAgregar;
+			}else{
+				aux = LetrasAZ;
+				while (aux->sgte != NULL){
+					aux = aux->sgte;}
+				if (aux->sgte == NULL){
+					nodoAgregar->ante = aux;
+					aux->sgte = nodoAgregar;
+				}
+			}
+		}
+	
+	}//Fin Void InsertarListaAZ
+
+
+	
+	//°Método Insertar Contacto
+	void InsertarContacto(Contacto* &ListaC){
+     Contacto* aux = new Contacto;
+     Contacto* nuevo = new Contacto;
+     nuevo->sgte=NULL;
+     cout<<"Digite el nombre a insertar en la sublista"<<endl;
+     getline(cin,nuevo->nombre);
+     cout<<"Ingrese el numero telefonico"<<endl;
+     getline(cin,nuevo->phone);
+     cout<<"Ingrese el correo electronico"<<endl;
+     getline(cin, nuevo->correo);
+     cout<<endl;
+     	if(EsVaciaContacto(ListaC)){
+      	   ListaC = nuevo;                      
+    	 }else{
+        	 aux = ListaC;
+        	 nuevo->sgte = aux;
+        	 ListaC = nuevo;
+     	}    
+	}
+	
+	
+	//¬¬ Metodo Mostrar Contactos Der-Izq
+	void MostrarContacto(Contacto* ListaC){
+         Contacto* aux = new Contacto;
+         if(EsVaciaContacto(ListaC))
+         {cout<< "No exiten Contactos" <<endl;}
+         else
+         {
+             aux=ListaC;
+             while(aux!=NULL)
+             {
+                   cout<<"Nombre: "<<aux->nombre<<endl;
+                   cout<<"Correo: "<<aux->correo<<endl;
+                   cout<<"Telefono: "<<aux->phone<<endl;
+                   aux=aux->sgte;
+             }
+         }
+     }//Fin MostrarContactos
+	
+/**********************************************************************************/
+/* Proceso de  Mostrar Letras como "prueba de que Funciona los metodos"*/
+/* Si quieren los quitan para que hagan la prueba que ya esta en el main (Y)      */
+/**********************************************************************************/
+
+/*
+	void MostrarLetras(Letras* LLetras){
+		Letras* aux = new Letras;
+		if (!EsVaciaLetras(LLetras)){
+			aux = LLetras;
+			while(aux != NULL)	{
+				cout<<"Letra: "<<aux->letra<<endl;
+				aux=aux->sgte;
+			}
+		}else{
+			cout<<"La lista esta vacia"<<endl;
+		}
+	}
+	
+*/
+	
+int main(int argc, char** argv) {
+
+	Letras*ListaLetras = new Letras;
+	CrearLetras(ListaLetras);
+	
+	Contacto*ListaC=new Contacto;
+	CrearContacto(ListaC);
+	
+	/*A partir de aquí Las pruebas parte Che, Joshua..
+	InsertarListaAZ(ListaLetras);    
+	MostrarLetras(ListaLetras);
+	RecorrerLetras(ListaLetras,'c');    //No he probado con caracteres especiales
+	MostrarLetras(ListaLetras);
+	//Fin Pruebas Parte Che, Joshua*/
+	
+	InsertarContacto(ListaC);
+	MostrarContacto(ListaC);
+	system("PAUSE");
+	return 0;
+}
