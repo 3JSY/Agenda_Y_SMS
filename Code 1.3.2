@@ -160,13 +160,14 @@ struct ListaSMSEnviados{
 		Letras* auxLetras = new Letras;
 		Contacto* aux = new Contacto;
     	Contacto* nuevo = new Contacto;
-    	string num="";
+    	string num=" ";
     	nuevo->sgte=NULL;
      
     	cout<<"Ingrese el numero telefonico"<<endl;
     	getline(cin,num);
-    	
-    	auxLetras = letras;
+    	//Con esta vara comentada funciona mae... El error es el getline de acá... Intentá creando un metodo que te devuelva esa
+    	//cadena que necesitamos y el resto con getline a ver que tal nos va.
+    	/*auxLetras = letras;
     	while(auxLetras!=NULL)
     	{
     		aux = ListaC;
@@ -187,7 +188,7 @@ struct ListaSMSEnviados{
     			cout << "Nombre: " << aux->nombre << endl;
     			cout << "Correo: " << aux->correo << endl;
     		}
-    	}
+    	}*/
      
 	}//Fin void
    
@@ -219,6 +220,7 @@ void MostrarSubLista(Contacto* ListaC){
      Contacto* aux = new Contacto;
      if(EsVaciaContacto(ListaC)){
          cout<<"Lista de Contactos vacia"<<endl;
+         cout<<endl;
      }else{
          aux = ListaC;
          while(aux!=NULL){
@@ -325,6 +327,8 @@ int main(int argc, char** argv) {
                         while(op2!=2)
                         {
                             MostrarPrinciplaSubLista(ListaLetras);
+                            system("PAUSE");
+                            op2=2;
                         }
                         system("CLS");
                         op2=0;
@@ -336,6 +340,9 @@ int main(int argc, char** argv) {
                         	cout<<"Ingrese la letra inicial del contacto a crear" << endl;
                         	cin>>letra;
                             InsertarPrincipalContactoSublista(ListaLetras, letra);
+                            cout<<"1. Continuar"<<endl;
+                            cout<<"2. Terminar"<<endl;
+                            cin>>op2;
                         }
                         system("CLS");
                         op2=0;
