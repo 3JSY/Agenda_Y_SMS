@@ -1,0 +1,501 @@
+#include <cstdlib>
+#include <iostream>
+#include <dos.h>
+#include <windows.h>
+
+using namespace std;
+
+
+//Definición de Estructuras
+struct Contacto{
+	string nombre;
+	string correo;
+	string phone;
+	Contacto*sgte;
+};
+
+struct Letras{
+	char letra;
+	Contacto*subLista;
+	Letras*ante;
+	Letras*sgte;
+};
+
+struct ListaSMSAEnviar{
+	string sms;
+	string InfoReceptor;
+	ListaSMSAEnviar* sgte;
+};
+
+struct ColaSMSPrioridad{
+	string prioridad;
+	ListaSMSAEnviar*subcola;
+	ColaSMSPrioridad*sgte;
+};
+
+struct ListaSMSEnviados{
+	  string MSG;
+	  string Destinatario;
+      ListaSMSEnviados*sgte;              
+};
+
+/*
+	1. MostrarContacto	(ajuste letra)							Che  listo
+	2. InsertarContacto (ajuste del numero de telefono)			Che  listo
+	3. EditarContacto (ver requerimiento 3 pag 2)				Che	 tomorrow		HoraFin 8:00 PM
+	4. CrearMensaje   (ver req 4)								Jeison      Tengo la idea de como hacerlos, no es dificil
+	5. EnviarMEnsaje  (ver req 5)								Jeison		Pero requiero metodos adicionales future features added coming soon
+	6. VerMensajesEnviados										Joshua
+	7. VerMensajesPendientes									Joshua
+	8. Salir													Joshua		HoraFin 01:10 pm Realizado por jeison
+	9. Menu principal                                           Jeison      HoraFin 01:44 pm
+	
+
+*/
+
+/***** Ronda#1-Inicio-By Che,Joshua & Jeison...\m/ *******/
+/***** Ronda#2-Atrasados-By Che,Joshua & Jeison...\m/ ****/
+
+	//*Metodo para Crear Contacto
+	void CrearContacto (Contacto*&LContacto){
+		LContacto=NULL; 													
+	}
+	
+	
+	//*Metodo para Crear Letras
+	void CrearLetras (Letras*&LLetras){
+		LLetras=NULL;   													
+	}
+	
+	
+	//Â°MÃ©todo para Crear Listas SMS A Enviar
+	void CrearListasSMSAEnviar(ListaSMSAEnviar* &LEnviar){
+		LEnviar=NULL;														
+	}
+	
+	//Â¬Â¬MÃ©todo para crear Lista SMS enviados
+	void CrearListaSMSEnviados(ListaSMSEnviados* &LEnviados)
+	{LEnviados=NULL;}
+	
+	
+	//Â°MÃ©todo para Crear Colas SMS Prioridad
+	void CrearColasSMSPrioridad(ListaSMSAEnviar* &CSMSPrioridad){
+		CSMSPrioridad=NULL;
+	}
+	
+	//*Metodo para Es Vacia Contacto
+	bool EsVaciaContacto(Contacto*LContacto){
+        if (LContacto == NULL){
+			return true;}
+		else{
+			return false;}
+	}
+	
+	//*Metodo para Es Vacia Letras
+	bool EsVaciaLetras(Letras*LLetras){
+        if (LLetras == NULL){
+			return true;}
+		else{
+			return false;}
+	}
+	
+	//Â°MÃ©todo para Es Vacia Lista SMS A Enviar
+	bool EsVaciaListaSMSAEnviar(ListaSMSAEnviar* LEnviar){
+		if (LEnviar == NULL){
+			return true;}
+		else{
+			return false;}
+	}
+	
+	//Â¬Â¬ Metodo Es Vacia Lista SMS Enviados
+	bool EsVaciaListaSMSEnviados(ListaSMSEnviados* LEnviados)
+	{
+         if(LEnviados=NULL)
+         {return true;}
+         else{return false;}
+    }
+	
+	bool ColaVaciaPrioridad(ColaSMSPrioridad* cola){
+     	if (cola == NULL){
+     	    return true;}
+		else{
+     		return false;}
+	}
+	
+	
+
+	
+	//Â°MÃ©todo Nodos de Letras
+	void InsertarListaAZ(Letras* &LetrasAZ){
+	//Declarar el nuevo nodo a insertar
+	Letras* aux = new Letras;
+	
+	//Agregar nodos de la A hasta la Z
+		for(char l='A';l<='Z';l++)
+		{	
+			Letras * nodoAgregar = new Letras;
+			nodoAgregar->sgte = NULL;
+			nodoAgregar->ante = NULL;
+			nodoAgregar->subLista = NULL;
+			nodoAgregar->letra=l;
+			if (EsVaciaLetras(LetrasAZ)){
+			    LetrasAZ = nodoAgregar;
+			}else{
+				aux = LetrasAZ;
+				while (aux->sgte != NULL){
+					aux = aux->sgte;}
+				if (aux->sgte == NULL){
+					nodoAgregar->ante = aux;
+					aux->sgte = nodoAgregar;
+				}
+			}
+		}
+	
+	}//Fin Void InsertarListaAZ
+
+
+	
+	//°Método Insertar Contacto
+	void InsertarSubLista(Letras* letras, Contacto* &ListaC){
+		Letras* auxLetras = new Letras;
+		Contacto* aux = new Contacto;
+    	Contacto* nuevo = new Contacto;
+    	string num=" ";
+    	nuevo->sgte=NULL;
+     
+    	cout<<"Ingrese el numero telefonico"<<endl;
+    	cin>>num;
+    	
+    	auxLetras = letras;
+    	while(auxLetras!=NULL)
+    	{
+    		aux = ListaC;
+    		while(aux!=NULL && aux->phone!=num)
+    		{
+    			aux = aux->sgte;
+    		}
+    		if (aux==NULL)
+    		{
+			cout << "Contacto Nuevo" << endl;
+    		cout << "Ingrese el Nombre: " <<endl;
+    		cin>>nuevo->nombre;
+    		cout << "Ingrese el Correo: " <<endl;
+    		cin>>nuevo->correo;
+    		nuevo->phone = num;
+    		ListaC = nuevo;
+			break;
+    		}else{
+    			cout << "Numero Identificado" << endl;
+    			cout << "Nombre: " << aux->nombre << endl;
+    			cout << "Correo: " << aux->correo << endl;
+    			break;
+    		}
+    	}     
+	}//Fin void
+   
+
+	//InsertarPrincipalContactoSubLista
+	void InsertarPrincipalContactoSublista(Letras* &ListaAZ, char LetraBuscar){
+	     Letras* aux = new Letras;
+	     Contacto* auxSubLista = new Contacto;
+	     if(EsVaciaLetras(ListaAZ)){
+	         cout<<"Lista Principal esta vacia"<<endl;                      
+	     }else{
+	         aux = ListaAZ;
+	         while(aux!=NULL && aux->letra != LetraBuscar){
+	             aux = aux->sgte;
+	         }
+	         if(aux==NULL){
+	             cout<<"No se encontro la letra a buscar"<<endl;
+	         }else{
+	             auxSubLista = aux->subLista;
+	             InsertarSubLista(ListaAZ,auxSubLista);
+	             aux->subLista = auxSubLista;
+	         }
+	     }           
+	}//Fin void InsertarPrincipalContactoSubLista
+
+
+	
+//Che
+void MostrarSubLista(Contacto* ListaC){
+     Contacto* aux = new Contacto;
+     if(EsVaciaContacto(ListaC)){
+         cout<<"Lista de Contactos vacia"<<endl;
+         cout<<endl;
+     }else{
+         aux = ListaC;
+         while(aux!=NULL){
+             cout<<"Nombre : "<<aux->nombre<<endl;
+             cout<<"Phone : "<<aux->phone<<endl;
+             cout<<"Correo : "<<aux->correo<<endl;
+             aux = aux->sgte;
+         }
+     }
+}
+
+void MostrarPrincipalSubLista(Letras* ListaL, char LetraBuscar){
+     Letras* aux = new Letras;
+     Contacto* auxSubCola = new Contacto;
+     if(EsVaciaLetras(ListaL)){
+         cout<<"No existen la lista de Letras"<<endl;
+     }else{
+         aux=ListaL;
+         while(aux!=NULL && aux->letra!=LetraBuscar){
+             
+             aux = aux->sgte;
+        }
+        if(aux==NULL && aux->letra!=LetraBuscar){
+        	cout << "No Existe la letra" << endl;
+        }else{
+        	cout<<"Letra: " << aux->letra << endl;
+             auxSubCola = aux->subLista;   
+             MostrarSubLista(auxSubCola);
+        }
+	}
+}
+
+void EliminarSubLista(Contacto* &ListaC){
+	Contacto* aux = new Contacto;
+	string num="";
+	
+	if (EsVaciaContacto(ListaC)){
+		cout<<"Contactos no Existentes"<<endl;
+	}else{
+		aux = ListaC;
+		cout << "Digite el numero de telefono del contacto a eliminar" << endl;
+		cin >> num;
+		if (aux->phone == num){
+			aux = aux->sgte;
+			ListaC = aux;
+		}else{
+			while (aux->sgte->sgte != NULL && aux->sgte->phone != num){
+				aux = aux->sgte;
+			}
+			//Elimina al final
+			if(aux->sgte->sgte == NULL){
+				if(aux->sgte->phone == num){
+					aux->sgte = NULL;
+				}else{
+					cout << "El numero indicado no se encuentra" << endl;
+				}
+				}else{
+					if(aux->sgte->phone == num){
+						aux->sgte = aux->sgte->sgte;
+					}
+			}
+		}
+	}
+}//Fin void
+
+void EliminarPrincipalContacto(Letras*&ListaL, char LetraBuscar){
+	Letras* aux = new Letras;
+	Contacto* auxSublista = new Contacto;
+	
+	if(EsVaciaLetras(ListaL)){
+		cout<<"No existen la lista de Letras"<<endl;
+	}else{
+		aux = ListaL;
+		if(aux->letra == LetraBuscar){
+			EliminarSubLista(auxSublista);
+		}
+	}
+}//Fin void
+
+//EditarContactos che beta por completar maÃ±ana
+void EditarContactos (Letras* &ListaL, char LetraBuscar){
+	string num="";
+	int opc=0;
+	Letras* aux = new Letras;
+	Contacto* auxSubCola = new Contacto;
+	
+	if(EsVaciaLetras(ListaL))
+	{
+		cout << "No existe la Lista de LEtras" << endl;
+	}else{
+		aux = ListaL;
+		while(aux!=NULL && aux->letra!=LetraBuscar){
+			aux = aux->sgte;
+		}
+		if(aux==NULL && aux->letra!= LetraBuscar){
+			cout << "No Existe la letra" << endl;
+		}else{
+			MostrarSubLista(auxSubCola);
+			cout<<"Digite el numero de telefono del contacto a Editar" << endl;
+			getline(cin,num);
+			if(auxSubCola->phone==num){
+				cout << "1. Editar\n2.Eliminar" << endl;
+				cin>>opc;
+				if(opc==1){
+					EliminarPrincipalContacto(ListaL, LetraBuscar);
+					InsertarPrincipalContactoSublista(ListaL, LetraBuscar);	
+				}
+				if(opc==2){
+					EliminarPrincipalContacto(ListaL, LetraBuscar);
+				}
+			}
+		}
+	}
+}//Fin void
+
+	
+	
+void OpcionErronea()
+{
+     system("CLS");
+     cout<<"                           Opcion Invalida" << endl;
+     cout<<endl;
+     cout<<"                 Por Favor digite una entrada valida" << endl;
+     cout<<endl;
+     system("PAUSE");
+     system("CLS");
+}
+ 
+ 
+int main(int argc, char** argv) {
+    int opcion=0;
+    int op2='0';
+    char letra=' ';
+	Letras*ListaLetras = new Letras;
+	CrearLetras(ListaLetras);
+	
+	Contacto*ListaC=new Contacto;
+	CrearContacto(ListaC);
+
+	InsertarListaAZ(ListaLetras);    
+	
+	//menu principal - Aqui se enlaza toda la wea
+	
+	while(opcion!=8)
+	{
+         //Esta es la pantalla principal... es lo primero que van a ver cuando ejecuten el proyecto
+         //Enredadera de ciclos anidados nivel SupremoDaveJD1506
+         //Si no entienden.... Devuelvanse a Progra 1 ._.
+         
+         cout<<"                           Sistema de Mensajeria 3J"<<endl;
+         cout<<endl;
+	     cout<<"                          Por favor elija una opcion"<<endl;
+	     cout<<endl;
+	     cout<<"1. Ver Contactos Existentes"<<endl;
+	     cout<<endl;
+	     cout<<"2. Anadir Contactos"<<endl;
+	     cout<<endl;
+	     cout<<"3. Editar / eliminar Contactos"<<endl;
+	     cout<<endl;
+	     cout<<"4. Crear Mensaje"<<endl;
+	     cout<<endl;
+	     cout<<"5. Enviar Mensajes"<<endl;
+	     cout<<endl;
+	     cout<<"6. Mensajes Enviados"<<endl;
+	     cout<<endl;
+	     cout<<"7. Bandeja de Salida"<<endl;
+	     cout<<endl;
+	     cout<<"8. Salir"<<endl;
+	     cout<<endl;
+	     cin>>opcion;                                 //aca se recibe la opcion a escoger por el usuario
+	    
+             switch(opcion)//Se evalua cada opcion y se despliega el menu elegido segun el caso
+             {
+                   case 1:
+                        system("CLS");
+                        while(op2!=2)
+                        {
+                        	cout<<"Ingrese la letra inicial del contacto a crear" << endl;
+                        	cin>>letra;
+                            MostrarPrincipalSubLista(ListaLetras, letra);
+                            system("PAUSE");
+                            op2=2;
+                        }
+                        system("CLS");
+                        op2=0;
+                        break;
+                   case 2:
+                        system("CLS");
+                        while(op2!=2)
+                        {
+                        	cout<<"Ingrese la letra inicial del contacto a crear" << endl;
+                        	cin>>letra;
+                            InsertarPrincipalContactoSublista(ListaLetras, letra);
+                            cout<<"1. Continuar"<<endl;
+                            cout<<"2. Terminar"<<endl;
+                            cin>>op2;
+                        }
+                        system("CLS");
+                        op2=0;
+                        break;
+                   case 3:
+                        system("CLS");
+                        while(op2!=3)
+                        {
+                        	cout<<"Ingrese la letra inicial del contacto a Editar" << endl;
+                        	cin>>letra;
+                            EditarContactos(ListaLetras, letra);
+                            
+                        }
+                        system("CLS");
+                        op2=0;
+                        break;
+                   case 4:
+                        system("CLS");
+                        while(op2!=2)
+                        {
+                            cout<<"Crear Mensaje"<<endl;
+                            cout<<"1. xxxxxx"<<endl;   //opcion del menÃº, se cambia por el metodo segun el menu
+                            cout<<"2. Menu Principal"<<endl;  //opcion para volver al menu principal
+                            cin>>op2;
+                        }
+                        system("CLS");
+                        op2=0;
+                        break;
+                   case 5:
+                        system("CLS");
+                        while(op2!=2)
+                        {
+                            cout<<"Enviar Mensajes"<<endl;
+                            cout<<"1. xxxxxx"<<endl;
+                            cout<<"2. Menu Principal"<<endl;
+                            cin>>op2;
+                        }
+                        system("CLS");
+                        op2=0;
+                        break;
+                   case 6:
+                        system("CLS");
+                        while(op2!=2)
+                        {
+                            cout<<"Mensajes Enviados"<<endl;
+                            cout<<"1. xxxxxx"<<endl;
+                            cout<<"2. Menu Principal"<<endl;
+                            cin>>op2;
+                        }
+                        system("CLS");
+                        op2=0;
+                        break;
+                   case 7:
+                        system("CLS");
+                        while(op2!=2)
+                        {
+                            cout<<"Buzon de Salida"<<endl;
+                            cout<<"1. xxxxxx"<<endl;
+                            cout<<"2. Menu Principal"<<endl;
+                            cin>>op2;
+                        }
+                        system("CLS");
+                        op2=0;
+                        break;
+                   case 8:
+                        system("CLS");
+                        cout<<"Hasta Luego"<<endl;
+                        
+                        break;
+                        
+                   default:
+				   		OpcionErronea();
+						   
+						break; 	
+             }
+         }
+	
+	system("PAUSE");
+	return 0;
+}
