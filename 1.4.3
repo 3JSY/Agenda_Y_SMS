@@ -8,8 +8,8 @@
 *Fecha de Inicio:		28/10/2014
 *-----------------------------------------------------------------------------------------------
 *						Bitácora de Modificación						*
-*Modificado por:			<Nombre Completo>
-*Fecha de Modificación:			<dd/mm/aaaa>
+*Modificado por:			<Jeison Romero>
+*Fecha de Modificación:			<05/11/2014>
 *-----------------------------------------------------------------------------------------------
 *Recomendaciones que debe seguir si usted modifica este código:
 * 1. Leer la documentació correspondiente del código fuente
@@ -74,40 +74,40 @@ struct ListaSMSEnviados{
 /***** Ronda#1-Inicio-By Che,Joshua & Jeison...\m/ *******/
 /***** Ronda#2-Atrasados-By Che,Joshua & Jeison...\m/ ****/
 
-	//*Metodo para Crear Contacto
-	void CrearContacto (Contacto*&LContacto){
+//*Metodo para Crear Contacto
+void CrearContacto (Contacto*&LContacto){
 		LContacto=NULL; 													
 	}
 	
 	
-	//*Metodo para Crear Letras
-	void CrearLetras (Letras*&LLetras){
+//*Metodo para Crear Letras
+void CrearLetras (Letras*&LLetras){
 		LLetras=NULL;   													
 	}
 	
 	
-	//Â°MÃ©todo para Crear Listas SMS A Enviar
-	void CrearListasSMSAEnviar(ListaSMSAEnviar* &LEnviar){
+//Â°MÃ©todo para Crear Listas SMS A Enviar
+void CrearListasSMSAEnviar(ListaSMSAEnviar* &LEnviar){
 		LEnviar=NULL;														
-	}
+}
 	
-	//Â¬Â¬MÃ©todo para crear Lista SMS enviados
-	void CrearListaSMSEnviados(ListaSMSEnviados* &LEnviados)
+//Â¬Â¬MÃ©todo para crear Lista SMS enviados
+void CrearListaSMSEnviados(ListaSMSEnviados* &LEnviados)
 	{LEnviados=NULL;}
 	
 	
-	//Â°MÃ©todo para Crear Colas SMS Prioridad
-	void CrearColasSMSPrioridad(ListaSMSAEnviar* &CSMSPrioridad){
+//Â°MÃ©todo para Crear Colas SMS Prioridad
+void CrearColasSMSPrioridad(ListaSMSAEnviar* &CSMSPrioridad){
 		CSMSPrioridad=NULL;
-	}
+}
 	
-	//*Metodo para Es Vacia Contacto
-	bool EsVaciaContacto(Contacto*LContacto){
+//*Metodo para Es Vacia Contacto
+bool EsVaciaContacto(Contacto*LContacto){
         if (LContacto == NULL){
 			return true;}
 		else{
 			return false;}
-	}
+}
 	
 	//*Metodo para Es Vacia Letras
 	bool EsVaciaLetras(Letras*LLetras){
@@ -139,14 +139,14 @@ struct ListaSMSEnviados{
 		else{
      		return false;}
 	}
-	
-	
 
-	
-	//Â°MÃ©todo Nodos de Letras
+/****************************Los Principales********************************/
+
+	//Lista de Char
 	void InsertarListaAZ(Letras* &LetrasAZ){
 	//Declarar el nuevo nodo a insertar
 	Letras* aux = new Letras;
+	
 	
 	//Agregar nodos de la A hasta la Z
 		for(char l='A';l<='Z';l++)
@@ -171,72 +171,96 @@ struct ListaSMSEnviados{
 	
 	}//Fin Void InsertarListaAZ
 
+//metodo para comprobar si el numero ya existe by Jeison
+	bool NumeroExiste(Contacto* ListaC, string num)
+	{
+		Contacto* aux=new Contacto;
+		if(EsVaciaContacto(ListaC))
+		{return false;}
+		else
+		{
+			aux=ListaC;
+			while(aux!=NULL)
+			{
+				if(aux->phone==num)
+				{return true;}
+				else
+				{aux=aux->sgte;}
+			}
+			return false;
+		}
+	}
+	
+
+//Insertar Contacto by Jeison **Ahora si funca, todo en un solo metodo
+void InsertarContacto(Letras* &ListaAZ, char buscar)
+{
+	//Auxiliares y variables
+	Letras* aux = new Letras;
+	Contacto* auxSub = new Contacto;
+	Contacto* nuevo = new Contacto;
+	nuevo->sgte=NULL;
+	string num="";
+	
+	if(EsVaciaLetras(ListaAZ))
+	{
+		cout<<"Lista Principal Vacia"<<endl;
+	}
+	else
+	{
+		aux=ListaAZ;
+		//Buscar la letra para verificar si el contacto existe
+		//Si no existe ingresarlo
+		while(aux!=NULL)
+		{
+			if(aux->letra!=buscar)
+			{aux=aux->sgte;}
+			else
+			{break;} //rompemos el ciclo ya que encontro la letra
+		}
+		if(aux->letra==buscar) //si salio del ciclo xq encontro la letra deseada
+		{
+			auxSub=aux->subLista; //agregamos un auxiliar de la sublista
+			cout<<"Digite el numero de telefono"<<endl;
+			cin>>num;
+			if(NumeroExiste(auxSub, num)) //buscamos si el contacto ya existe
+			{	//si exite muestra la info
+				cout << "Numero Identificado" << endl;
+    			cout << "Nombre: " << auxSub->nombre << endl;
+    			cout << "Correo: " << auxSub->correo << endl;
+			}
+			else
+			{	//si no existe ingresamos la info
+				cout << "Contacto Nuevo" << endl;
+				cout << "Ingrese el Nombre: " <<endl;
+				cin>>nuevo->nombre;
+				cout << "Ingrese el Correo: " <<endl;
+				cin>>nuevo->correo;
+				nuevo->phone = num;
+				
+				if(auxSub==NULL)
+				{
+					//sublista vacia
+					aux->subLista=nuevo;
+				}
+				else
+				{
+					//Insertar al inicio
+					nuevo->sgte = aux->subLista;
+					aux->subLista = nuevo;
+					//Acá destaco que todo se va a insertar al inicio, debimos haber diseñado un metodo para ingresar en orden alfabetico
+					//Pero aun no vemos ordenamiento xD
+				}
+			}
+			
+		}
+	}
+}
+	
+
 
 	
-	//°Método Insertar Contacto
-	void InsertarSubLista(Letras* letras, Contacto* &ListaC){
-		Letras* auxLetras = new Letras;
-		Contacto* aux = new Contacto;
-    	Contacto* nuevo = new Contacto;
-    	string num=" ";
-    	nuevo->sgte=NULL;
-     
-    	cout<<"Ingrese el numero telefonico"<<endl;
-    	cin>>num;
-    	
-    	auxLetras = letras;
-    	while(auxLetras!=NULL)
-    	{
-    		aux = ListaC;
-    		while(aux!=NULL && aux->phone!=num)
-    		{
-    			aux = aux->sgte;
-    		}
-    		if (aux==NULL)
-    		{
-			cout << "Contacto Nuevo" << endl;
-    		cout << "Ingrese el Nombre: " <<endl;
-    		cin>>nuevo->nombre;
-    		cout << "Ingrese el Correo: " <<endl;
-    		cin>>nuevo->correo;
-    		nuevo->phone = num;
-    		nuevo->sgte = ListaC;
-    		ListaC = nuevo;
-			break;
-    		}else{
-    			cout << "Numero Identificado" << endl;
-    			cout << "Nombre: " << aux->nombre << endl;
-    			cout << "Correo: " << aux->correo << endl;
-    			break;
-    		}
-    	}     
-	}//Fin void
-   
-
-	//InsertarPrincipalContactoSubLista
-	void InsertarPrincipalContactoSublista(Letras* &ListaAZ, char LetraBuscar){
-	     Letras* aux = new Letras;
-	     Contacto* auxSubLista = new Contacto;
-	     if(EsVaciaLetras(ListaAZ)){
-	         cout<<"Lista Principal esta vacia"<<endl;                      
-	     }else{
-	         aux = ListaAZ;
-	         while(aux!=NULL && aux->letra != LetraBuscar){
-	             aux = aux->sgte;
-	         }
-	         if(aux==NULL){
-	             cout<<"No se encontro la letra a buscar"<<endl;
-	         }else{
-	             auxSubLista = aux->subLista;
-	             InsertarSubLista(ListaAZ,auxSubLista);
-	             aux->subLista = auxSubLista;
-	         }
-	     }           
-	}//Fin void InsertarPrincipalContactoSubLista
-
-
-	
-//Che
+//Che, Mostrar
 void MostrarSubLista(Contacto* ListaC){
      Contacto* aux = new Contacto;
      if(EsVaciaContacto(ListaC)){
@@ -275,16 +299,15 @@ void MostrarPrincipalSubLista(Letras* ListaL, char LetraBuscar){
 	}
 }
 
-void EliminarSubLista(Contacto* &ListaC){
+
+//Eliminar Contacto
+void EliminarSubLista(Contacto* &ListaC, string num){
 	Contacto* aux = new Contacto;
-	string num="";
 	
 	if (EsVaciaContacto(ListaC)){
-		cout<<"Contactos no Existentes"<<endl;
+		cout<<"Contacto no Existente"<<endl;
 	}else{
 		aux = ListaC;
-		cout << "Digite el numero de telefono del contacto a eliminar" << endl;
-		cin >> num;
 		if (aux->phone == num){
 			aux = aux->sgte;
 			ListaC = aux;
@@ -308,7 +331,7 @@ void EliminarSubLista(Contacto* &ListaC){
 	}
 }//Fin void
 
-void EliminarPrincipalContacto(Letras*&ListaL, char LetraBuscar){
+/*void EliminarPrincipalContacto(Letras*&ListaL, char LetraBuscar){
 	Letras* aux = new Letras;
 	Contacto* auxSublista = new Contacto;
 	
@@ -320,10 +343,86 @@ void EliminarPrincipalContacto(Letras*&ListaL, char LetraBuscar){
 			EliminarSubLista(auxSublista);
 		}
 	}
-}//Fin void
+}//Fin void*/
+
+
+//Editar Contactos by Jeison
+void EditarContactos(Letras* &ListaL, char buscar)
+{
+	string num="";
+	int opc=0;
+	int dec=0;
+	Letras* aux=new Letras;
+	Contacto* auxSub=new Contacto;
+	Contacto* nuevo= new Contacto;
+	if(EsVaciaLetras(ListaL))
+	{
+		cout<<"Lista Principal Vacia"<<endl;
+	}
+	else
+	{
+		aux=ListaL;
+		while(aux!=NULL)
+		{
+			if(aux->letra!=buscar)
+			{
+				aux=aux->sgte;
+			}
+			else
+			{
+				cout<<"Digite el numero de telefono a editar"<<endl;
+				cin>>num;
+				if(NumeroExiste(aux->subLista, num))
+				{
+					auxSub=aux->subLista;
+					while(auxSub!=NULL)
+					{
+						if(auxSub->phone==num)
+						{
+							cout<<"Nombre: "<<auxSub->nombre<<endl;
+							cout<<"Tel: "<<auxSub->phone<<endl;
+							cout<<"Correo: "<<auxSub->correo<<endl;
+							cout<<endl;
+							cout<<"Digite la opcion a realizar"<<endl;
+							cout<<"1. Eliminar\n2. Editar"<<endl;
+							cin>>opc;
+							switch(opc)
+							{
+                                  cout<<endl;
+							      case 1:
+							           EliminarSubLista(auxSub, num);
+							           break;
+							      case 2:
+							           EliminarSubLista(auxSub, num);
+                                       InsertarContacto(ListaL,buscar);
+							           break;
+							      default:
+                                       cout<<"Opcion Invalida"<<endl;
+							           break;
+								}
+						}
+						else
+						{
+                            auxSub=auxSub->sgte;
+                        }
+					}
+				}
+				else
+				{
+					cout<<"El numero digitado no existe"<<endl;
+				}
+			}
+		}
+		if(aux==NULL&&aux->letra!=buscar)
+		{cout<<"No Existe la Letra Digitada"<<endl;}
+	}
+}
+
+
+
 
 //EditarContactos che beta por completar maÃ±ana
-void EditarContactos (Letras* &ListaL, char LetraBuscar){
+/*void EditarContactos (Letras* &ListaL, char LetraBuscar){
 	string num="";
 	int opc=0;
 	Letras* aux = new Letras;
@@ -331,7 +430,7 @@ void EditarContactos (Letras* &ListaL, char LetraBuscar){
 	
 	if(EsVaciaLetras(ListaL))
 	{
-		cout << "No existe la Lista de LEtras" << endl;
+		cout << "No existe la Lista de Letras" << endl;
 	}else{
 		aux = ListaL;
 		while(aux!=NULL && aux->letra!=LetraBuscar){
@@ -348,7 +447,7 @@ void EditarContactos (Letras* &ListaL, char LetraBuscar){
 				cin>>opc;
 				if(opc==1){
 					EliminarPrincipalContacto(ListaL, LetraBuscar);
-					InsertarPrincipalContactoSublista(ListaL, LetraBuscar);	
+					InsertarContacto(ListaL, LetraBuscar);	
 				}
 				if(opc==2){
 					EliminarPrincipalContacto(ListaL, LetraBuscar);
@@ -356,7 +455,7 @@ void EditarContactos (Letras* &ListaL, char LetraBuscar){
 			}
 		}
 	}
-}//Fin void
+}//Fin void*/
 
 	
 	
@@ -388,7 +487,7 @@ int main(int argc, char** argv) {
 	
 	while(opcion!=8)
 	{
-         system("color 70"); //system("color FondoTexto");
+         system("color 89"); //system("color FondoTexto");
          
          cout<<"                           Sistema de Mensajeria 3J"<<endl;
          cout<< "\t\t ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼\n";
@@ -433,9 +532,11 @@ int main(int argc, char** argv) {
                         system("CLS");
                         while(op2!=2)
                         {
+                            system("CLS");
                         	cout<<"Ingrese la letra inicial del contacto a crear" << endl;
                         	cin>>letra;
-                            InsertarPrincipalContactoSublista(ListaLetras, letra);
+                            InsertarContacto(ListaLetras, letra);
+                            cout<<endl;
                             cout<<"1. Continuar"<<endl;
                             cout<<"2. Terminar"<<endl;
                             cin>>op2;
@@ -450,6 +551,15 @@ int main(int argc, char** argv) {
                         	cout<<"Ingrese la letra inicial del contacto a Editar" << endl;
                         	cin>>letra;
                             EditarContactos(ListaLetras, letra);
+                            op2=3;
+                            //recorrer lista primaria
+                            //encontrar caracter
+                            //recorrer sublista
+                            //encontrar contacto
+                            //mostrar contacto
+                            //mostrar opciones editar o eliminar
+                            //si editar reemplazar contacto
+                            //si eliminar pues... eliminar contacto
                             
                         }
                         system("CLS");
@@ -518,3 +628,4 @@ int main(int argc, char** argv) {
 	system("PAUSE");
 	return 0;
 }
+
